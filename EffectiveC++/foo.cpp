@@ -98,6 +98,144 @@ class AtomicClock : public TimeKeeper {};
 class WaterClock : public TimeKeeper {};
 class WristWatch : public TimeKeeper {};
 
+class DBConnection {
+   public:
+    static DBConnection create();
+    void close();
+};
+class DBConn {
+   public:
+    DBConn();
+    void close() {
+        db.close();
+        closed = true;
+    }
+    ~DBConn() {
+        try {
+            db.close();
+        } catch (char* error) {
+            // do something
+        }
+    }
+
+   private:
+    DBConnection db;
+    bool closed;
+};
+// DBConn::~DBConn() {
+//     try {
+//         db.close();
+//     } catch (char* error) {
+//         abort();
+//     }
+// }
+
+class Transaction {
+   public:
+    Transaction() { init(); };  // non-virtual
+    virtual void logTransaction() const = 0;
+
+   private:
+    void init() { logTransaction(); }  // virtual
+};
+// base class construction
+// Transaction::Transaction() { logTransaction(); }
+// derived class
+class BuyTransaction : public Transaction {
+   public:
+    virtual void logTransaction() const;
+};
+class SellTransaction : public Transaction {
+   public:
+    virtual void logTransaction() const;
+};
+// non-virtual
+class Transaction2 {
+   public:
+    explicit Transaction2(const string& logInfo);
+    void logTransaction2(const string& logInfo) const;  // non-virtual
+};
+Transaction2::Transaction2(const string& logInfo) { logTransaction2(logInfo); }
+class BuyTransaction2 : public Transaction2 {
+   public:
+    BuyTransaction2() : Transaction2(createLogString()) {}
+
+   private:
+    static string createLogString();
+};
+
+class Bitmap {};
+class Widget {
+   public:
+    Widget& operator=(int rhs) { return *this; }
+    Widget& operator+=(const Widget& rhs) { return *this; }
+    Widget& operator-=(Widget rhs) { return *this; }
+    void swap(Widget& rhs);
+
+   private:
+    Bitmap* pb;
+};
+Widget& Widget::operator=(const Widget& rhs) {
+    // identity test
+    if (this == &rhs) {
+        return *this;
+    }
+    Bitmap* pOrig = pb;
+    pb = new Bitmap(*rhs.pb);
+    delete pOrig;
+    return *this;
+}
+// copy and swap
+Widget& Widget::operator=(const Widget& rhs) {
+    Widget temp(rhs);
+    swap(temp);
+    return *this;
+}
+// by value
+Widget& Widget::operator-=(Widget rhs) {
+    swap(rhs);
+    return *this;
+}
+
+void logCall(const string& funcName);
+class Date {};
+class Customer {
+   public:
+    // Customer();
+    Customer(const Customer& rhs);
+    Customer& operator=(const Customer& rhs);
+
+   private:
+    string name;
+    Date lastTransaction;
+};
+Customer::Customer(const Customer& rhs) : name(rhs.name) {
+    logCall("Customer copy constructor");
+}
+Customer& Customer::operator=(const Customer& rhs) {
+    logCall("Customer copy assignment operator.");
+    name = rhs.name;
+    return *this;
+}
+class PriorityCustomer : public Customer {
+   public:
+    PriorityCustomer(const PriorityCustomer& rhs);
+    PriorityCustomer& operator=(const PriorityCustomer& rhs);
+
+   private:
+    int priority;
+};
+PriorityCustomer::PriorityCustomer(const PriorityCustomer& rhs)
+    : Customer(rhs), priority(rhs.priority) {
+    logCall("PriorityCustomer copy constructor");
+}
+PriorityCustomer& PriorityCustomer::operator=(const PriorityCustomer& rhs) {
+    logCall("'PriorityCustomer copy assignment operator");
+    Customer::operator=(rhs);
+    priority = rhs.priority;
+    return *this;
+}
+
 int main() {
     int a = 0, b = 1;
     callWithMax(a, b);

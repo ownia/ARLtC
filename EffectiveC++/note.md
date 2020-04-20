@@ -14,3 +14,11 @@
 06. Explicitly disallow the use of complier-generated functions you do not want.
 07. Declare destructors virtual in polymorphic base classes.
 08. Prevent exceptions from leaving destructors.
+09. Never call virtual functions during construction or destruction.
+10. Have assignment operators return a reference to \*this.
+11. Handle assignment to self in operator=.
+12. Copy all parts of an object.
+
+- **Resource Management**
+
+13. Use objects to manage resources.
