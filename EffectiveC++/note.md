@@ -22,3 +22,21 @@
 - **Resource Management**
 
 13. Use objects to manage resources.
+	(C++11 use unique_str replace auto_ptr)
+	(Rvalue reference)
+14. Think carefully about copying behaviors in resource-managing classes.
+	(RAII: Resource Acquisition Is Initialization)
+15. Provide access to raw resource in resource-managing classes.
+16. Use the same form in corresponding uses of new and delete.
+17. Store newed objects in smart pointers in standalone statements.
+
+- **Designs and Declarations**
+
+18. Make interfaces easy to use correctly and hard to use incorrectly.
+	(cross-DLL problem)
+19. Treat class design as type design.
+	(type conversion operators)
+	(non-explicit-one-argument)
+20. Prefer pass-by-reference-to-const to pass-by-value
+21. Don't try to return a reference when you must return an object.
+22. 
