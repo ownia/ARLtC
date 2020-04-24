@@ -301,6 +301,45 @@ void* NewHandlerSupport<T>::operator new(size_t size) throw(bad_alloc) {
 template <typename T>
 new_handler NewHandlerSupport<T>::currentHandler = 0;
 
+// placement new and placement delete.
+class Widget3 {
+   public:
+    static void* operator new(size_t size, ostream& logStream) throw(bad_alloc);
+    static void operator delete(void* pMemory) throw();
+    static void operator delete(void* pMemory, ostream& logStream) throw();
+};
+class StandardNewDeleteForms {
+   public:
+    // normal new/delete
+    static void* operator new(size_t size) throw(bad_alloc) {
+        return ::operator new(size);
+    }
+    static void operator delete(void* pMemory) throw() {
+        ::operator delete(pMemory);
+    }
+    // placement new/delete
+    static void* operator new(size_t size, void* ptr) throw(bad_alloc) {
+        return ::operator new(size, ptr);
+    }
+    static void operator delete(void* pMemory, void* ptr) throw() {
+        return ::operator delete(pMemory, ptr);
+    }
+    // nothrow new/delete
+    static void* operator new(size_t size, const nothrow_t& nt) throw() {
+        return ::operator new(size, nt);
+    }
+    static void operator delete(void* pMemory, const nothrow_t& nt) throw() {
+        ::operator delete(pMemory);
+    }
+};
+class Widget4 : public StandardNewDeleteForms {
+   public:
+    using StandardNewDeleteForms::operator new;
+    using StandardNewDeleteForms::operator delete;
+    static void* operator new(size_t size, ostream& logStream) throw(bad_alloc);
+    static void operator delete(void* pMemory, ostream& logStream) throw();
+};
+
 int main() {
     MP3Player mp;
     // mp.checkOut();

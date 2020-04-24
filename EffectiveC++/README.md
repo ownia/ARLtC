@@ -97,4 +97,11 @@
 
 49. Understand the behavior of the new-handler
 50. Understand when it makes sense to replace new and delete.
-51. 
+51. Adhere to convention when writing new and delete.
+52. Write placement delete if you write placement new.
+
+- **Miscellany**
+
+53. Pay attention to compiler warnings.
+54. Familiarize yourself with the standard library, including TR1.
+55. Familiarize yourself with Boost.
