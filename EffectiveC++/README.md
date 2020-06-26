@@ -46,6 +46,7 @@
 	(pimpl: pointer to implementation)
 
 - **Implementations**
+
 26. Postpone variable definitions as long as possible.
 27. Minimize casting.
 	(avoid cascading dynamic_casts)
